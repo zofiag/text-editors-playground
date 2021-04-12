@@ -7,8 +7,6 @@ export const useIsOk = () => {
   const { isOk } = useContext(SomeContext);
   const { customCommand } = useCommands();
 
-  console.log("is it working", isOk);
-
   useEffect(() => {
     customCommand();
   }, [isOk, customCommand]);
