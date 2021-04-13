@@ -6,12 +6,12 @@ import { CustomExtension } from "./extensions/custom/CustomExtension";
 import { useIsOk } from "./hooks/useIsOk";
 import { SomeContext } from "./some-provider";
 
-import { useMentionExtension } from "./extensions/mention/MentionExtension";
+import { getMentionExtension } from "./extensions/mention/MentionExtension";
 import { MentionPopup } from "./extensions/mention/MentionPopup";
 
 export const Editor = () => {
   const { toggleIsOk } = useContext(SomeContext);
-  const { mentionAtomExtension } = useMentionExtension();
+  const { mentionAtomExtension } = getMentionExtension();
 
   const { manager, onChange, state } = useRemirror({
     extensions: () => [

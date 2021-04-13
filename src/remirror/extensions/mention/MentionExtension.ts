@@ -1,6 +1,6 @@
-import { MentionAtomExtension } from "remirror/extensions";
+import { MentionAtomExtension, MentionAtomOptions } from "remirror/extensions";
 
-export const useMentionExtension = () => {
+export const getMentionExtension = (options?: MentionAtomOptions) => {
   const mentionAtomExtension = new MentionAtomExtension({
     disableDecorations: false,
     matchers: [
@@ -12,6 +12,7 @@ export const useMentionExtension = () => {
         suggestClassName: "sugget-class-name",
       },
     ],
+    ...options,
   });
 
   return { mentionAtomExtension };
