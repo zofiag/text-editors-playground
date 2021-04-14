@@ -40,6 +40,7 @@ export const Editor = () => {
       new BoldExtension(),
       new ItalicExtension(),
       new CustomExtension(),
+      // Extensions can accept parameters
       new CustomReactExtension({ someParameter: true }),
     ],
     content:
@@ -54,6 +55,7 @@ export const Editor = () => {
           manager={manager}
           onChange={onChange}
           state={state}
+          // Here we can pass our custom hooks
           hooks={[useIsOk]}
         >
           <EditorInner />

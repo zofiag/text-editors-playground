@@ -48,6 +48,8 @@ export type HeadingExtensionAttributes = ProsemirrorAttributes<{
 
 export interface HeadingOptions {}
 
+// This is a copy of a Heading extension
+// It contains a custom command in L:104
 @extension<HeadingOptions>({
   defaultOptions: {
     levels: [1, 2, 3, 4, 5, 6],
@@ -101,7 +103,7 @@ export class CustomExtension extends NodeExtension<HeadingOptions> {
   @command()
   customCommand(): CommandFunction {
     return ({ dispatch, tr }) => {
-      dispatch?.(tr.insertText("wooohoooo"));
+      dispatch?.(tr.insertText("I come from the CustomExtension"));
 
       return true;
     };

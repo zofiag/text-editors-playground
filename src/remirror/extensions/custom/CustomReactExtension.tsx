@@ -19,19 +19,24 @@ const CustomReactPlaceholder: ComponentType<NodeViewComponentProps> = () => (
 const CustomReactEl: ComponentType<NodeViewComponentProps> = ({
   node,
   forwardRef,
+  // Utility for updating proseMirror attributes on a node
+  updateAttributes,
 }) => {
+  // We can create a local state
   const [counter, setCounter] = useState(0);
-  const { customCommand } = useCommands();
+  // We can consume contexts
   const { toggleIsOk, isOk } = useContext(SomeContext);
+  // We can even trigger commands from different extensions here
+  const { customCommand } = useCommands();
 
   return (
     <div {...node.attrs} ref={forwardRef}>
-      <small>this is {`${isOk}`}</small>
+      <small>this is a value from the outer provider {`${isOk}`}</small>
 
       <button onClick={() => setCounter((i) => i + 1)}>
-        Click me to increase the counter: {counter}
+        Increase the counter: {counter}
       </button>
-      <button onClick={toggleIsOk}>custom command</button>
+      <button onClick={toggleIsOk}>Add text from - CustomExtension</button>
     </div>
   );
 };
