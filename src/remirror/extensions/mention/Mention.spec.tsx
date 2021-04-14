@@ -4,44 +4,14 @@ import { renderEditor, RemirrorTestChain } from "jest-remirror";
 import {
   createCoreManager,
   ItalicExtension,
-  MentionAtomChangeHandler,
-  MentionAtomExtension,
   MentionAtomOptions,
 } from "remirror/extensions";
 import { prosemirrorNodeToHtml } from "@remirror/core";
 import { getMentionExtension } from "./MentionExtension";
-import { AnyExtension } from "@remirror/core";
-import {
-  createReactManager,
-  ReactComponentExtension,
-  Remirror,
-} from "@remirror/react";
+import { createReactManager, Remirror } from "@remirror/react";
 import { act, render, fireEvent } from "@testing-library/react";
 import { MentionPopup } from "./MentionPopup";
 import { EditorState } from "remirror";
-
-/**
- * Create the mention extension with an optional `onChange` handler.
- */
-function create(options: MentionAtomOptions) {
-  const { mentionAtomExtension: extension } = getMentionExtension(options);
-  const editor = renderEditor([extension, new ItalicExtension()] as any);
-  const { add, view, manager, commands } = editor;
-  const { doc, p } = editor.nodes;
-  const { mentionAtom } = editor.attributeNodes;
-
-  return {
-    add,
-    doc,
-    p,
-    mentionAtom,
-    view,
-    manager,
-    commands,
-    editor,
-    extension,
-  };
-}
 
 describe("Mention", () => {
   const { schema } = createCoreManager([
@@ -61,15 +31,13 @@ describe("Mention", () => {
     );
   });
 
-  it("opens up a mention popup on entering a trigger", () => {
+  it("toggles a mention popup on entering/removing a trigger character", () => {
     const chain = RemirrorTestChain.create(
       createReactManager([getMentionExtension().mentionAtomExtension], {
         stringHandler: "html",
       })
     );
-    const { manager, nodes, marks } = chain;
-    const { doc, p } = nodes;
-    const { bold, italic } = marks;
+    const { manager } = chain;
 
     const Editor = () => {
       const [value, setValue] = useState<EditorState>(
@@ -105,10 +73,6 @@ describe("Mention", () => {
     });
 
     expect(queryByRole("menu")).not.toBeInTheDocument();
-
-    // expect(chain.state.doc).toEqualRemirrorDocument(
-    //   doc(p(bold(italic("This"))))
-    // );
   });
 
   it("should create a mention node after selecting one of the suggesters", () => {
@@ -117,10 +81,9 @@ describe("Mention", () => {
         stringHandler: "html",
       })
     );
-    const { manager, nodes, marks } = chain;
+    const { manager, nodes } = chain;
     const { mentionAtom } = chain.attributeNodes;
-    const { doc, p } = nodes;
-    const { bold, italic } = marks;
+    const { p } = nodes;
 
     const Editor = () => {
       const [value, setValue] = useState<EditorState>(
@@ -143,7 +106,7 @@ describe("Mention", () => {
       );
     };
 
-    const { getByRole, queryByRole, getAllByRole, debug } = render(<Editor />);
+    const { getByRole, getAllByRole } = render(<Editor />);
 
     act(() => {
       chain.commands.insertText("@");
