@@ -1,16 +1,37 @@
 import { useContext } from "react";
 import { BoldExtension, ItalicExtension } from "remirror/extensions";
-import { Remirror, useRemirror, EditorComponent } from "@remirror/react";
+import {
+  Remirror,
+  useRemirror,
+  EditorComponent,
+  useCommands,
+} from "@remirror/react";
+
+import { useIsOk } from "./hooks/useIsOk";
+import { SomeContext, SomeProvider } from "./some-provider";
 
 import { CustomExtension } from "./extensions/custom/CustomExtension";
-import { useIsOk } from "./hooks/useIsOk";
-import { SomeContext } from "./some-provider";
-
 import { getMentionExtension } from "./extensions/mention/MentionExtension";
 import { MentionPopup } from "./extensions/mention/MentionPopup";
+import { CustomReactExtension } from "./extensions/custom/CustomReactExtension";
+
+const EditorInner = () => {
+  const { toggleIsOk } = useContext(SomeContext);
+  const { toggleCustomReactBlock } = useCommands();
+
+  return (
+    <>
+      <EditorComponent />
+      <button onClick={toggleIsOk}>Add text from - CustomExtension</button>
+      <button onClick={toggleCustomReactBlock}>
+        Add node from - CustomReactExtension
+      </button>
+      <MentionPopup />
+    </>
+  );
+};
 
 export const Editor = () => {
-  const { toggleIsOk } = useContext(SomeContext);
   const { mentionAtomExtension } = getMentionExtension();
 
   const { manager, onChange, state } = useRemirror({
@@ -19,6 +40,7 @@ export const Editor = () => {
       new BoldExtension(),
       new ItalicExtension(),
       new CustomExtension(),
+      new CustomReactExtension({ someParameter: true }),
     ],
     content:
       "<p><strong>I am strong.</strong> and <em>I am emphasized</em></p>",
@@ -27,16 +49,16 @@ export const Editor = () => {
 
   return (
     <>
-      <Remirror
-        manager={manager}
-        onChange={onChange}
-        state={state}
-        hooks={[useIsOk]}
-      >
-        <EditorComponent />
-        <button onClick={toggleIsOk}>Toggle isOk</button>
-        <MentionPopup />
-      </Remirror>
+      <SomeProvider>
+        <Remirror
+          manager={manager}
+          onChange={onChange}
+          state={state}
+          hooks={[useIsOk]}
+        >
+          <EditorInner />
+        </Remirror>
+      </SomeProvider>
     </>
   );
 };

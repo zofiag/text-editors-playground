@@ -8,10 +8,7 @@ export const SomeContext = React.createContext({
 export const SomeProvider: React.FC = ({ children }) => {
   const [isOk, setIsOk] = useState(true);
 
-  console.log("state", isOk);
-
   const toggleIsOk = useCallback(() => {
-    console.log("triggered");
     setIsOk((t) => !t);
   }, []);
 

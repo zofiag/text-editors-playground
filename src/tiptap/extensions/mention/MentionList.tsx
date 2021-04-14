@@ -63,10 +63,6 @@ export const MentionList = forwardRef<HTMLDivElement, SuggestionProps>(
 
     useEffect(() => setState(initialState), [items]);
 
-    useEffect(() => {
-      console.log("ref", ref);
-    }, [ref]);
-
     return (
       <NodeViewWrapper className="react-component">
         <div className="items">
